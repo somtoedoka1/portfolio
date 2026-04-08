@@ -707,11 +707,26 @@ export default function PersonalWebsite() {
                   description: 'Production-ready features for VBank app used by 1M+ customers. Optimized performance and built responsive UI components from Figma designs.',
                   tech: ['React', 'HTML/CSS', 'SASS', 'Performance Optimization'],
                   gradient: 'from-orange-500 to-red-500',
+                  github: 'https://github.com/somtoedoka1',
                   features: [
                     'Shipped to 1M+ users',
                     '20% performance improvement',
                     'Responsive UI components',
                     'Production-grade code quality'
+                  ]
+                },
+                {
+                  title: 'Open Interface',
+                  subtitle: 'AI-Powered Computer Control',
+                  description: 'Self-drives your computer by sending natural language requests to an LLM backend (GPT-4o, Gemini, etc.) which determines the required steps, then automatically executes them via simulated keyboard and mouse input.',
+                  tech: ['Python', 'GPT-4o', 'Gemini', 'Computer Vision', 'LLM'],
+                  gradient: 'from-cyan-500 to-blue-500',
+                  github: 'https://github.com/AmberSahdev/Open-Interface',
+                  features: [
+                    'Natural language computer control',
+                    'Multi-LLM backend support (GPT-4o, Gemini)',
+                    'Automated keyboard & mouse simulation',
+                    'Screenshot-based course correction'
                   ]
                 }
               ].map((project, index) => (
@@ -753,10 +768,17 @@ export default function PersonalWebsite() {
                     </div>
                     
                     <div className="flex space-x-4">
-                      <button className="flex items-center space-x-2 text-purple-400 hover:text-pink-400 transition-colors group/btn">
-                        <Github size={18} />
-                        <span className="group-hover/btn:translate-x-1 transition-transform">Code</span>
-                      </button>
+                      {project.github ? (
+                        <a href={project.github} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 text-purple-400 hover:text-pink-400 transition-colors group/btn">
+                          <Github size={18} />
+                          <span className="group-hover/btn:translate-x-1 transition-transform">Code</span>
+                        </a>
+                      ) : (
+                        <button className="flex items-center space-x-2 text-purple-400 hover:text-pink-400 transition-colors group/btn">
+                          <Github size={18} />
+                          <span className="group-hover/btn:translate-x-1 transition-transform">Code</span>
+                        </button>
+                      )}
                       <button className="flex items-center space-x-2 text-purple-400 hover:text-pink-400 transition-colors group/btn">
                         <ExternalLink size={18} />
                         <span className="group-hover/btn:translate-x-1 transition-transform">Demo</span>
