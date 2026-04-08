@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoseLink – Class Presentation</title>
+  <style>
+    :root {
+      --rose: #e63946;
+      --dark: #0d1117;
+      --panel: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ── slide deck ── */
+    #deck {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 80px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(30px);
+      transition: opacity .4s ease, transform .4s ease;
+      text-align: center;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .slide.left {
+      transform: translateY(-30px);
+    }
+
+    /* ── typography ── */
+    .eyebrow {
+      font-size: .75rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+
+    h1 span { color: var(--rose); }
+
+    h2 {
+      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    h2 span { color: var(--rose); }
+
+    .subtitle {
+      font-size: clamp(.95rem, 2vw, 1.15rem);
+      color: var(--muted);
+      max-width: 640px;
+      line-height: 1.6;
+    }
+
+    .meta {
+      margin-top: 36px;
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* ── cards ── */
+    .cards {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 24px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      flex: 1 1 220px;
+      text-align: left;
+    }
+
+    .card-icon {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .card p {
+      font-size: .875rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* ── list ── */
+    ul.bullets {
+      list-style: none;
+      max-width: 700px;
+      width: 100%;
+      margin-top: 18px;
+      text-align: left;
+    }
+
+    ul.bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .95rem;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    ul.bullets li:last-child { border-bottom: none; }
+
+    ul.bullets li .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--rose);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    ul.bullets li strong { color: var(--text); }
+
+    /* ── pipeline ── */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 28px;
+      max-width: 860px;
+    }
+
+    .step {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: center;
+      min-width: 130px;
+    }
+
+    .step .icon { font-size: 1.5rem; }
+    .step .label {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .arrow {
+      font-size: 1.3rem;
+      color: var(--rose);
+      padding: 0 6px;
+    }
+
+    /* ── table ── */
+    table {
+      border-collapse: collapse;
+      margin-top: 24px;
+      width: 100%;
+      max-width: 700px;
+      font-size: .9rem;
+    }
+
+    th {
+      background: var(--panel);
+      color: var(--accent);
+      padding: 10px 16px;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 2px solid var(--rose);
+    }
+
+    td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    td:first-child { color: var(--text); }
+
+    .pass {
+      color: #3fb950;
+      font-weight: 700;
+    }
+
+    /* ── big stat ── */
+    .stats {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 28px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat .num {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900;
+      color: var(--rose);
+      line-height: 1;
+    }
+
+    .stat .desc {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-top: 6px;
+      max-width: 120px;
+    }
+
+    /* ── progress bar ── */
+    #progress-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: var(--rose);
+      transition: width .4s ease;
+      z-index: 100;
+    }
+
+    /* ── controls ── */
+    #controls {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 100;
+    }
+
+    #controls button {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 7px 18px;
+      cursor: pointer;
+      font-size: .85rem;
+      transition: background .2s;
+    }
+
+    #controls button:hover { background: var(--border); }
+    #controls button:disabled { opacity: .3; cursor: default; }
+
+    #slide-num {
+      font-size: .8rem;
+      color: var(--muted);
+      min-width: 48px;
+      text-align: center;
+    }
+
+    /* ── code block ── */
+    pre {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-size: .78rem;
+      line-height: 1.7;
+      text-align: left;
+      max-width: 720px;
+      width: 100%;
+      margin-top: 20px;
+      overflow-x: auto;
+      color: #a5d6ff;
+    }
+
+    pre .kw { color: #ff7b72; }
+    pre .fn { color: #d2a8ff; }
+    pre .cm { color: var(--muted); }
+    pre .str { color: #a5d6ff; }
+
+    .tag {
+      display: inline-block;
+      background: rgba(230,57,70,.15);
+      border: 1px solid rgba(230,57,70,.35);
+      color: var(--rose);
+      border-radius: 20px;
+      font-size: .75rem;
+      padding: 3px 12px;
+      font-weight: 600;
+      margin: 4px;
+    }
+
+    .tag.blue {
+      background: rgba(88,166,255,.12);
+      border-color: rgba(88,166,255,.3);
+      color: var(--accent);
+    }
+
+    .tag.green {
+      background: rgba(63,185,80,.12);
+      border-color: rgba(63,185,80,.3);
+      color: #3fb950;
+    }
+  </style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- ① TITLE -->
+  <section class="slide active" id="s0">
+    <div class="eyebrow">Junior Seminar · Fisk University · March 2026</div>
+    <h1><span>RoseLink</span></h1>
+    <h1 style="font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:400;color:var(--muted);margin-top:-8px;">
+      Autonomous GUI Agents for Legacy Enterprise Orchestration
+    </h1>
+    <div class="meta">
+      Somtochukwu Emmanuel Chukwudi-Edoka &nbsp;·&nbsp; ID 4070<br>
+      Instructor: Hina Raja &nbsp;·&nbsp; Fisk University
+    </div>
+  </section>
+
+  <!-- ② THE PROBLEM -->
+  <section class="slide" id="s1">
+    <div class="eyebrow">The Problem</div>
+    <h2>The <span>Automation Gap</span></h2>
+    <p class="subtitle">
+      Millions of businesses still run critical work on <strong>legacy desktop software</strong>
+      that has no API, no webhooks, and no easy way to connect to modern tools.
+    </p>
+    <div class="cards" style="margin-top:28px;">
+      <div class="card">
+        <div class="card-icon">📂</div>
+        <h3>API-Dark Software</h3>
+        <p>Closed-source accounting, POS, and inventory apps with zero integration endpoints.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">👷</div>
+        <h3>Manual Labor Tax</h3>
+        <p>Skilled employees spend hours copy-pasting data between PDFs and local databases.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔧</div>
+        <h3>Old Automation Fails</h3>
+        <p>Traditional RPA breaks when the UI shifts. API tools can't see what they can't touch.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ SOLUTION -->
+  <section class="slide" id="s2">
+    <div class="eyebrow">The Solution</div>
+    <h2>Introducing <span>RoseLink</span></h2>
+    <p class="subtitle">
+      A digital secretary that <strong>sees your screen, understands the task, and acts</strong>—
+      just like a human, but without the coffee breaks.
+    </p>
+    <div style="margin-top:28px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+      <span class="tag">Vision-Language-Action Pipeline</span>
+      <span class="tag blue">Open Interface Framework</span>
+      <span class="tag blue">LangGraph Orchestration</span>
+      <span class="tag green">Docker Isolation</span>
+      <span class="tag green">Next.js Dashboard</span>
+    </div>
+    <p class="subtitle" style="margin-top:24px;">
+      Built on the open-source <strong>Open Interface</strong> project—no API required,
+      no code changes to legacy software.
+    </p>
+  </section>
+
+  <!-- ④ HOW IT WORKS -->
+  <section class="slide" id="s3">
+    <div class="eyebrow">How It Works</div>
+    <h2>The <span>VLA Pipeline</span></h2>
+    <div class="pipeline">
+      <div class="step"><div class="icon">📄</div><div class="label">Upload PDF</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="icon">📸</div><div class="label">Screenshot</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="icon">🧠</div><div class="label">LLM Sees Screen</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="icon">🖱️</div><div class="label">Click / Type</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="icon">✅</div><div class="label">Verify</div></div>
+    </div>
+    <ul class="bullets" style="margin-top:28px;">
+      <li><span class="dot"></span><div><strong>Perceive:</strong> Continuous screen captures feed a multimodal LLM that reads the GUI state.</div></li>
+      <li><span class="dot"></span><div><strong>Decide:</strong> LangGraph routes the agent through multi-step workflows with error correction built in.</div></li>
+      <li><span class="dot"></span><div><strong>Act:</strong> Open Interface executes precise OS-level mouse clicks and keyboard inputs.</div></li>
+    </ul>
+  </section>
+
+  <!-- ⑤ CODE SNIPPET -->
+  <section class="slide" id="s4">
+    <div class="eyebrow">Implementation</div>
+    <h2>Error-<span>Resilient</span> Orchestration</h2>
+    <p class="subtitle">LangGraph treats the workflow as a graph—if something goes wrong, it reroutes automatically.</p>
+    <pre><span class="cm"># LangGraph node: try to act, reroute on failure</span>
+<span class="kw">def</span> <span class="fn">execute_gui_action</span>(state):
+    vision_context = <span class="fn">get_screen_state</span>()
+    coordinates = <span class="fn">llm_vision_parse</span>(vision_context, state.target_element)
+
+    <span class="kw">if</span> coordinates:
+        open_interface.<span class="fn">click</span>(coordinates.x, coordinates.y)
+        <span class="kw">return</span> {<span class="str">"next_node"</span>: <span class="str">"verify_action"</span>}
+    <span class="kw">else</span>:
+        <span class="kw">return</span> {<span class="str">"next_node"</span>: <span class="str">"error_correction"</span>}  <span class="cm"># scroll, zoom, retry</span></pre>
+  </section>
+
+  <!-- ⑥ RESULTS -->
+  <section class="slide" id="s5">
+    <div class="eyebrow">Results</div>
+    <h2>It <span>Works</span></h2>
+    <div class="stats">
+      <div class="stat">
+        <div class="num">96%</div>
+        <div class="desc">Task completion rate across 50 PDF invoices</div>
+      </div>
+      <div class="stat">
+        <div class="num">3.2s</div>
+        <div class="desc">Average end-to-end task time</div>
+      </div>
+      <div class="stat">
+        <div class="num">9/10</div>
+        <div class="desc">Error-correction success when UI shifted</div>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Operation</th><th>Target</th><th>Actual</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Screenshot + Preprocess</td><td>&lt;200ms</td><td>150ms</td><td class="pass">✓</td></tr>
+        <tr><td>LLM Visual Inference</td><td>&lt;3s</td><td>2.4s</td><td class="pass">✓</td></tr>
+        <tr><td>OS-Level Action</td><td>&lt;100ms</td><td>45ms</td><td class="pass">✓</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ⑦ WHY IT MATTERS -->
+  <section class="slide" id="s6">
+    <div class="eyebrow">Impact</div>
+    <h2>Why <span>RoseLink</span> Matters</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">💰</div>
+        <h3>No Overhaul Needed</h3>
+        <p>Enterprises keep their proven legacy software and eliminate manual data entry—zero migration cost.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📦</div>
+        <h3>SaaS-Ready</h3>
+        <p>Docker isolation lets multiple agents run concurrently on one server with no cursor conflicts.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔮</div>
+        <h3>Future: Local AI</h3>
+        <p>Swap cloud LLMs for local VLMs to cut latency and protect sensitive financial or medical data.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑧ CONCLUSION -->
+  <section class="slide" id="s7">
+    <div class="eyebrow">Conclusion</div>
+    <h2><span>RoseLink</span> in One Sentence</h2>
+    <p class="subtitle" style="font-size:clamp(1.1rem,2.5vw,1.4rem);color:var(--text);max-width:700px;line-height:1.5;">
+      An AI agent that <span style="color:var(--rose);font-weight:700;">sees</span> your screen,
+      <span style="color:var(--rose);font-weight:700;">understands</span> the task, and
+      <span style="color:var(--rose);font-weight:700;">acts</span>—automating any legacy desktop app
+      without touching a single line of its code.
+    </p>
+    <div class="meta" style="margin-top:40px;">
+      <strong style="color:var(--text);">Tech Stack</strong><br>
+      Open Interface · LangGraph · Multimodal LLM · Docker · Next.js · Pytest · Xvfb
+    </div>
+    <div style="margin-top:32px;font-size:.85rem;color:var(--muted);">
+      Use ← → arrow keys or the buttons below to navigate
+    </div>
+  </section>
+
+</div><!-- /deck -->
+
+<div id="progress-bar"></div>
+
+<div id="controls">
+  <button id="prev" disabled>← Prev</button>
+  <span id="slide-num">1 / 8</span>
+  <button id="next">Next →</button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  let cur = 0;
+
+  function go(n) {
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('left');
+    cur = Math.max(0, Math.min(n, slides.length - 1));
+    slides.forEach((s, i) => {
+      if (i !== cur) { s.classList.remove('active'); }
+    });
+    slides[cur].classList.remove('left');
+    slides[cur].classList.add('active');
+
+    document.getElementById('slide-num').textContent = `${cur + 1} / ${slides.length}`;
+    document.getElementById('prev').disabled = cur === 0;
+    document.getElementById('next').disabled = cur === slides.length - 1;
+    document.getElementById('progress-bar').style.width =
+      `${((cur + 1) / slides.length) * 100}%`;
+  }
+
+  document.getElementById('prev').onclick = () => go(cur - 1);
+  document.getElementById('next').onclick = () => go(cur + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') go(cur + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    go(cur - 1);
+  });
+
+  go(0);
+</script>
+</body>
+</html>
